@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Data Structures & Algorithms Notes</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1720;
+      --muted:#9aa7b2;
+      --text:#d6e6f0;
+      --accent:#6c8cff;
+      --accent-2:#8b6cff;
+      --card:#0c1318;
+      --code-bg:#071018;
+      --border: rgba(255,255,255,0.06);
+      --radius:12px;
+      --mono: "JetBrains Mono", monospace;
+      --ui: "Inter", system-ui,-apple-system, "Segoe UI", Roboto, Arial;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background: linear-gradient(180deg,#071018 0%, #0b1116 60%);
+      color:var(--text);
+      font-family:var(--ui);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+      direction: ltr;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:28px auto;
+      padding:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow: 0 6px 30px rgba(2,6,12,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      margin-bottom:28px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    header .title{
+      font-family:var(--ui);
+      font-weight:700;
+      font-size:28px;
+      color:var(--text);
+      letter-spacing:0.2px;
+    }
+
+    header .subtitle{
+      margin-top:4px;
+      font-size:14px;
+      color:var(--muted);
+      font-weight:400;
+    }
+
+    h1,h2,h3,h4{
+      color:var(--text);
+      margin:16px 0 12px 0;
+      line-height:1.3;
+      font-weight:700;
+    }
+
+    h1{ font-size:26px; color: var(--accent); }
+    h2{ font-size:22px; margin-top: 24px; border-left: 3px solid var(--accent); padding-left: 12px; }
+    h3{ font-size:18px; color: #cfe3ff; }
+    h4{ font-size:16px; color: var(--muted); }
+
+    p, li, td, th, blockquote {
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .content > * { margin-bottom:12px; }
+
+    ul, ol { padding-left:1.2rem; margin:8px 0; }
+    li { margin:6px 0; }
+
+    section.card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+      padding:24px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.03);
+      margin:16px 0;
+    }
+
+    hr{
+      border: none;
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      margin:30px 0;
+    }
+
+    /* Code blocks */
+    pre, code {
+      font-family: var(--mono);
+      font-size:13px;
+      color:#dbeefd;
+    }
+
+    pre {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:10px;
+      padding:16px;
+      overflow-x:auto;
+      box-shadow: 0 4px 18px rgba(2,6,12,0.3);
+      border:1px solid rgba(255,255,255,0.03);
+      margin: 0;
+    }
+
+    code.inline {
+      background: rgba(255,255,255,0.05);
+      padding:2px 6px;
+      border-radius:4px;
+      font-size:0.9em;
+      color:#e2e8f0;
+      font-family: var(--mono);
+    }
+
+    /* Highlight.js overrides */
+    .hljs { background: transparent !important; padding: 0 !important; }
+
+    /* Blockquote */
+    blockquote{
+      border-left: 3px solid var(--accent);
+      padding:12px 16px;
+      margin:16px 0;
+      background: rgba(108, 140, 255, 0.05);
+      color: #e2e8f0;
+      border-radius:0 8px 8px 0;
+      font-style: italic;
+    }
+
+    /* Copy button container */
+    .code-wrapper {
+        margin: 16px 0;
+    }
+    .code-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: rgba(255,255,255,0.03);
+      padding: 8px 16px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.03);
+      border-bottom: none;
+    }
+    .code-header span {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .code-wrapper pre {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .copy-btn {
+      background: rgba(255,255,255,0.05);
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.05);
+      padding:4px 10px;
+      border-radius:6px;
+      cursor:pointer;
+      font-family:var(--ui);
+      font-size:12px;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.1); color:var(--text); }
+
+    /* Responsive */
+    @media (max-width:720px){
+      .wrap{ margin:12px; padding:16px; }
+      header .title { font-size:22px; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="title">Data Structures & Algorithm Notes</div>
+      <div class="subtitle">Comprehensive Implementation & Concepts</div>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <section class="card">
+        <h1>Data Structures</h1>
+        <h2>Types of Data Structures:</h2>
+        <ul>
+            <li>
+                <h3>Linear D.S</h3>
+                <ul>
+                    <li>Ex: Array, Linked List</li>
+                </ul>
+            </li>
+            <li>
+                <h3>Non-Linear D.S</h3>
+                <ul>
+                    <li>Ex: Tree, Graph</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h1>Node</h1>
+        <p>Contains: <code class="inline">Data</code> (any type) and <code class="inline">Next</code> / <code class="inline">Previous</code> (pointers to Node).</p>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Node Class</span><button class="copy-btn" data-target="code_node">Copy</button></div>
+<pre><code id="code_node" class="language-cpp">class Node {
+public:
+	int Data;
+	Node *pPrev;
+	Node *pNext;
+	Node(int val) {
+		data = val;
+		pPrev = null;
+		pNext = null;
+	}
+}
+</code></pre>
+        </div>
+    </section>
+
+    <section class="card">
+        <h1>Single linked list</h1>
+        <p>A list of nodes where the <code class="inline">Next</code> of each node is connected to the next node.<br>
+        The first node in the linked list is called the <strong>Head</strong>.</p>
+        <p><strong>Pros:</strong> Efficient memory usage (not storage), efficient insertion and deletion.<br>
+        <strong>Cons:</strong> Needs more time than arrays.</p>
+        
+        <p>Can be implemented by:</p>
+        <ul>
+            <li><code class="inline">Next</code> and <code class="inline">data</code> (Singly Linked List — Forward only)</li>
+        </ul>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Forward SLL</span><button class="copy-btn" data-target="code_sll1">Copy</button></div>
+<pre><code id="code_sll1" class="language-plaintext">  Head          Tail
+--------      --------
+| Data |      | Data |
+--------      --------
+| Next | ---&gt; | Next | ---&gt; Null
+--------      --------
+</code></pre>
+        </div>
+
+        <ul>
+            <li><code class="inline">Previous</code> and <code class="inline">data</code> (Singly Linked List — Backward only)</li>
+        </ul>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Backward SLL</span><button class="copy-btn" data-target="code_sll2">Copy</button></div>
+<pre><code id="code_sll2" class="language-plaintext">			Head		  tail
+	      --------      --------
+	      | Data |      | Data |
+		  --------      --------
+NULL &lt;--- | Prec | &lt;--- | prev |
+	      --------      --------
+</code></pre>
+        </div>
+    </section>
+
+    <section class="card">
+        <h1>Double Linked list:</h1>
+        <p>The list contains nodes with <code class="inline">prev</code> and <code class="inline">next</code>, and has both head and tail.</p>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Visual Representation</span><button class="copy-btn" data-target="code_dll_dia">Copy</button></div>
+<pre><code id="code_dll_dia" class="language-plaintext">	 Head                 Tail
+---------------      ---------------
+|    Data     |      |    Data     |
+--------------- ---&gt; ---------------
+| prev | next | &lt;--- | prev | next |
+---------------      ---------------
+</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+            <div class="code-header"><span>Class Definition</span><button class="copy-btn" data-target="code_dll_class">Copy</button></div>
+<pre><code id="code_dll_class" class="language-cpp">class DoublyLinkedList {
+	Node *pHead;
+	Node *pTail;
+public:
+	DoublyLinkedList(){pHead = pTail = NULL;}
+	int addNode(int val);
+	int insertNode(int val, int loc);
+	Node *searchNode(int val);
+	int deleteNode(int loc);
+	void freeList();
+};
+</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+            <div class="code-header"><span>Add Node</span><button class="copy-btn" data-target="code_dll_add">Copy</button></div>
+<pre><code id="code_dll_add" class="language-cpp">int DoublyLinkedList::addNode(int val) {
+	int added = 0;
+	Node *ptr = new Node(val);
+	if (ptr != NULL) {
+		added = 1;
+		if (pHead == NULL){
+			pHead = pTail = ptr;
+		}
+		else {
+			pTail-&gt;pNext = ptr;
+			ptr-&gt;pPrev = pTail;
+			pTail = ptr;
+		}
+	}
+	return added;
+}
+</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+            <div class="code-header"><span>Search Node</span><button class="copy-btn" data-target="code_dll_search">Copy</button></div>
+<pre><code id="code_dll_search" class="language-cpp">Node *DoublyLinkedList::searchNode(int val) {
+	Node *ptr;
+	ptr = pHead;
+	while(ptr != NULL &amp;&amp; ptr-&gt;data != val) {
+		ptr = ptr-&gt;pNext;
+	}
+	return ptr;
+}
+</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+            <div class="code-header"><span>Insert Node</span><button class="copy-btn" data-target="code_dll_insert">Copy</button></div>
+<pre><code id="code_dll_insert" class="language-cpp">int DoublyLinkedList::insertNode(int val, int loc) {
+	int inserted = 0;
+	Node *ptr = new Node(val);
+	if (ptr != NULL) {
+		inserted = 1;
+		if (pHead == NULL)
+			pHead = pTail = ptr;
+		else {
+			if(loc == 0) {
+				pHead-&gt;pPrev = ptr;
+				ptr-&gt;pNext = pHead;
+				pHead = ptr;
+			}
+			else {
+				Node* temp = pHead;
+				for (int i = 0; i &lt; loc-1 &amp;&amp; temp; i++) {
+					temp = temp-&gt;pNext;
+				}
+				if (temp == pTail || temp == NULL) {
+					pTail-&gt;pNext = ptr;
+					ptr-&gt;pPrev = pTail;
+					pTail = ptr;
+				} else {
+					ptr-&gt;pPrev = temp;
+					ptr-&gt;pNext = temp-&gt;pNext;
+					temp-&gt;pNext-&gt;pPrev = ptr;
+					temp-&gt;pNext = ptr;
+				}
+			}
+		}
+	}
+	return inserted;
+}
+</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+            <div class="code-header"><span>Free List</span><button class="copy-btn" data-target="code_dll_free">Copy</button></div>
+<pre><code id="code_dll_free" class="language-cpp">void DoublyLinkedList::freeList() {
+	Node *ptr;
+	while(pHead != NULL) {
+		ptr = pHead;
+		pHead = pHead-&gt;pNext;
+		delete(ptr);
+	}
+	pTail = NULL;
+}
+</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+            <div class="code-header"><span>Delete Node</span><button class="copy-btn" data-target="code_dll_delete">Copy</button></div>
+<pre><code id="code_dll_delete" class="language-cpp">int DoublyLinkedList::deleteNode(int loc) {
+	int deleted = 0;
+	Node *ptr;
+	if (pHead) {     // Exist a list
+		if (loc == 0) {
+			ptr = pHead;
+			if (pHead == pTail) { // only one Node
+				pHead = pTail = NULL;
+				delete(ptr);
+				deleted = 1;
+			}
+			else {
+				pHead = pHead-&gt;pNext;
+				pHead-&gt;pPrev = NULL;
+			}
+			delete(ptr);
+			deleted = 1;
+		}
+		else {
+			ptr = pHead;
+			for (int i = 0; i &lt; loc &amp;&amp; ptr != NULL; i++) {
+				ptr = ptr-&gt;pNext
+			}
+			if (ptr != NULL) {
+				if (ptr == pTail) {
+					pTail = pTail-&gt;pPrev;
+					pTail-&gt;pNext = Null;
+				}
+				else {
+					ptr-&gt;pPrev-&gt;pNext = ptr-&gt;pNext;
+					ptr-&gt;pNext-&gt;pPrev = ptr-&gt;pPrev;
+				}
+				deleted = 1;
+				delete(ptr);
+			}
+		}
+	}
+	return deteled;
+}
+</code></pre>
+        </div>
+    </section>
+
+    <section class="card">
+        <h1>Stack (First In Last Out) (Last In First Out)</h1>
+        <p>Implemented using the <code class="inline">Top</code> of stack variable.<br>
+        Can implement a stack using:</p>
+        <ul>
+            <li>Array</li>
+            <li>Linked List</li>
+        </ul>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Stack Visualization</span><button class="copy-btn" data-target="code_stack_vis">Copy</button></div>
+<pre><code id="code_stack_vis" class="language-plaintext">---------------------------------------------
+| --------   --------   --------   -------- |
+| | Data |   | Data |   | Data |   | Data | |
+| --------   --------   --------   -------- |
+---------------------------------------------
+First In Last out
+</code></pre>
+        </div>
+        <ul>
+            <li>Examples: Data segment applying stack, calculator operations (in-fix, pre-fix, post-fix).</li>
+        </ul>
+
+        <h2>Stack By Array:</h2>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Array Implementation</span><button class="copy-btn" data-target="code_stack_arr">Copy</button></div>
+<pre><code id="code_stack_arr" class="language-cpp">class Stack {
+	int arr[10]; // +ve values only
+	int tos;
+public:
+	Stack() {
+		tos = 0;
+	}
+	int push(int val) {
+		int pushed = 0;
+		if (tos &lt; 10) {
+			arr[tos] = val;
+			tos++;
+			pushed = 1;
+		}
+		return pushed;
+	}
+	int pop() {
+		int popped = -1;
+		if (tos &gt; 0) {
+			tos--;
+			popped = arr[tos];
+		}
+		return popped;
+	}
+};
+</code></pre>
+        </div>
+
+        <h2>Stack by Dynamic Allocation:</h2>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Dynamic Implementation</span><button class="copy-btn" data-target="code_stack_dyn">Copy</button></div>
+<pre><code id="code_stack_dyn" class="language-cpp">class Stack {
+	int *arr; // +ve values only
+	int size;
+	int tos;
+public:
+	Stack(int s) {
+		size = s;
+		tos = 0;
+		arr = new int[size];
+	}
+	int push(int val) {
+		int pushed = 0;
+		if (tos &lt; size) {
+			arr[tos] = val;
+			tos++;
+			pushed = 1;
+		}
+		return pushed;
+	}
+	int pop() {
+		int popped = -1;
+		if (tos &gt; 0) {
+			tos--;
+			popped = arr[tos];
+		}
+		return popped;
+	}
+	int getSize() {return size;}
+	int getTos() {return tos;}
+	int isEmpty() {return (tos == 0);}
+};
+</code></pre>
+        </div>
+    </section>
+
+    <section class="card">
+        <h1>Queue (First In First Out) (Last In Last Out)</h1>
+        <h3>Types of Queue:</h3>
+        <ul>
+            <li>Linear Queue</li>
+            <li>Circular Queue
+                <blockquote>
+                    The course will cover Linear Queue.
+                </blockquote>
+            </li>
+        </ul>
+        <p>Examples: Message Queue in Windows.<br>
+        Can implement a queue using:</p>
+        <ul>
+            <li>Array</li>
+            <li>Linked List</li>
+        </ul>
+
+        <h3>Queue by Linked List:</h3>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Node Struct</span><button class="copy-btn" data-target="code_queue_node">Copy</button></div>
+<pre><code id="code_queue_node" class="language-cpp">struct Node {
+	Node *pNext;
+	int data;
+};
+</code></pre>
+        </div>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Queue Class</span><button class="copy-btn" data-target="code_queue_class">Copy</button></div>
+<pre><code id="code_queue_class" class="language-cpp">class Queue {
+	Node *pHead;
+	Node *pTail;
+public:
+	Queue() {pHead = pTail = NULL;}
+	int enQueue(int d) {
+		int queued = 0;
+		Node *ptr;
+		ptr = new Node;
+		if (ptr) {
+			ptr-&gt;data = d;
+			ptr-&gt;pNext = NULL;
+			if (pHead == NULL) {
+				pHead = pTail = ptr;
+			} 
+			else {
+				pTail-&gt;pNext = ptr;
+				pTail = ptr;
+			}
+			queued = 1;
+		}
+		return queued;
+	}
+	Node *deQueue() {
+		Node *ptr = pHead;
+		if (pHead) {
+			pHead = pHead-&gt;pNext;
+			if (pHead == NULL) {
+				pTail = NULL;
+			}
+		}
+		return ptr;
+	}
+};
+</code></pre>
+        </div>
+    </section>
+
+    <section class="card">
+        <h1>Tree</h1>
+        <p>A tree consists of <strong>nodes</strong> and <strong>branches</strong>.<br>
+        Examples: structure organization, file system.</p>
+        <ul>
+            <li>The first node is called the <strong>Root</strong>.</li>
+            <li>A node with no children is called a <strong>Terminal node</strong> or <strong>Leaf node</strong>.</li>
+        </ul>
+
+        <h2>Binary Tree</h2>
+        <p>A binary tree has <strong>at most two branches</strong> (left and right).<br>
+        Each node contains a <strong>value</strong>.</p>
+
+        <h2>Binary Search Tree (BST)</h2>
+        <p>In a BST:</p>
+        <ul>
+            <li>All data in the <strong>left</strong> subtree are <strong>smaller</strong> than the root.</li>
+            <li>All data in the <strong>right</strong> subtree are <strong>greater</strong> than the root.</li>
+        </ul>
+
+        <h2>Traversing the Binary Tree</h2>
+        <h3>1. In-Order Traversal</h3>
+        <ul>
+            <li>Traverse <strong>left</strong> subtree </li>
+            <li>Process the <strong>root</strong> </li>
+            <li>Traverse <strong>right</strong> subtree </li>
+        </ul>
+        <h3>2. Pre-Order Traversal</h3>
+        <ul>
+            <li>Process the <strong>root</strong> </li>
+            <li>Traverse <strong>left</strong> subtree </li>
+            <li>Traverse <strong>right</strong> subtree </li>
+        </ul>
+        <h3>3. Post-Order Traversal</h3>
+        <ul>
+            <li>Traverse <strong>left</strong> subtree </li>
+            <li>Traverse <strong>right</strong> subtree </li>
+            <li>Process the <strong>root</strong></li>
+        </ul>
+        <blockquote>
+            You cannot reconstruct or traverse a tree structure using the <strong>In-Order traversal alone</strong>.<br>
+            You must have <strong>In-Order</strong> together with either <strong>Pre-Order</strong> or <strong>Post-Order</strong> in order to fully determine the tree.
+        </blockquote>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Reconstruction Example</span><button class="copy-btn" data-target="code_tree_ex">Copy</button></div>
+<pre><code id="code_tree_ex" class="language-plaintext">Example:
+Suppose you have the following traversals:
+
+- In-Order:    C D F G A E D  
+- Pre-Order:   A B C D E F G
+
+Using (In-Order + Pre-Order), you can reconstruct the entire tree because:
+- Pre-Order gives you the root first.
+- In-Order tells you how the left and right subtrees are split.
+
+But if you have (In-Order alone), the tree cannot be reconstructed because many different trees can produce the same In-Order traversal.
+</code></pre>
+        </div>
+    </section>
+
+    <section class="card">
+        <h1>Algorithms</h1>
+        <h2>Algorithm Analysis:</h2>
+        <p>It is the process of finding the computational complexity of an algorithm (the amount of time, storage, or other resources needed to execute it).</p>
+        <blockquote>
+            <ul>
+                <li>One way to detect algorithm efficiency is to implement the algorithm and measure its execution time.</li>
+                <li>This method is not reliable because it depends on the machine itself.</li>
+                <li>There are many factors that affect complexity analysis:
+                    <ul>
+                        <li>Processing (single or multi-processing)</li>
+                        <li>CPU core speed</li>
+                        <li>Computer architecture</li>
+                        <li>RAM speed (read/write)</li>
+                        <li>Input size (not related to the machine)</li>
+                    </ul>
+                </li>
+            </ul>
+        </blockquote>
+
+        <h2>Assumption of Time Complexity (Asymptotic Complexity)</h2>
+        <p>Asymptotic time complexity is used to analyze how an algorithm performs as the input size increases,<br>
+        while ignoring constant values and hardware-related factors.</p>
+        <p>The analysis mainly focuses on the <strong>worst-case scenario</strong>, which represents the maximum time an algorithm may take to run.<br>
+        This helps guarantee performance under all conditions.</p>
+
+        <h2>Common Asymptotic Notations (Worst Case)</h2>
+        <h3>1- Big-O Notation — O(f(n))</h3>
+        <p>Represents the <strong>worst-case time complexity</strong> of an algorithm.</p>
+        <p><strong>Examples:</strong></p>
+        <ul>
+            <li><strong>O(1):</strong> Constant time
+                <ul>
+                    <li>Accessing an element in an array by index.</li>
+                </ul>
+            </li>
+            <li><strong>O(n):</strong> Linear time
+                <ul>
+                    <li>Traversing an array once.</li>
+                </ul>
+            </li>
+            <li><strong>O(n²):</strong> Quadratic time
+                <ul>
+                    <li>Bubble Sort in the worst case.</li>
+                </ul>
+            </li>
+            <li><strong>O(log n):</strong> Logarithmic time
+                <ul>
+                    <li>Binary Search (worst case).</li>
+                </ul>
+            </li>
+            <li><strong>O(n log n):</strong>
+                <ul>
+                    <li>Merge Sort (worst case).</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>2- Ω (Omega) Notation</h3>
+        <p>Represents the <strong>best-case time complexity</strong> of an algorithm.<br>
+        It describes the <strong>minimum time</strong> required for an algorithm to run.</p>
+        <p><strong>Example:</strong></p>
+        <ul>
+            <li>Bubble Sort → Ω(n) when the list is already sorted.</li>
+        </ul>
+
+        <h3>Θ (Theta) Notation</h3>
+        <p>Represents the <strong>average or exact time complexity</strong> of an algorithm.<br>
+        It gives a <strong>tight bound</strong> on the algorithm’s running time.</p>
+        <p><strong>Example:</strong></p>
+        <ul>
+            <li>Merge Sort → Θ(n log n) in all cases.</li>
+        </ul>
+        <blockquote>
+            <strong>Note:</strong> In this course, the analysis mainly focuses on the <strong>worst-case time complexity (Big-O notation)</strong>,<br>
+            since it represents the maximum running time and guarantees performance in all situations.
+        </blockquote>
+    </section>
+
+    <section class="card">
+        <h1>Algorithm Design Techniques</h1>
+        <h2>Divide and Conquer</h2>
+        <p>Solves the problem by dividing it into smaller subproblems, then combining the results.</p>
+        <h2>Greedy</h2>
+        <p>Used in best and worst cases (Optimization Problems).<br>
+        Takes the best choice at each step.</p>
+        <h2>Dynamic Programming</h2>
+        <p>Used in best and worst cases (Optimization Problems).<br>
+        Solves overlapping subproblems by storing previous results.</p>
+        <h2>Brute Force</h2>
+        <p>Generates all possible combinations.</p>
+    </section>
+
+    <section class="card">
+        <h1>Sorting and Searching Algorithms</h1>
+        <h2>Bubble Sort</h2>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Pseudo Code</span><button class="copy-btn" data-target="code_bubble_pseudo">Copy</button></div>
+<pre><code id="code_bubble_pseudo" class="language-plaintext">bubble_sort(List) {
+	for loop (i = i to n-1)
+		for loop (j = 0 to n-1)
+			if (List[j] &gt; List[j+1])
+				swap(List[i], List[i+1])
+		end loop
+	end loop
+}
+</code></pre>
+        </div>
+        <p>In C++ (Modified Bubble Sort)</p>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Bubble Sort C++</span><button class="copy-btn" data-target="code_bubble">Copy</button></div>
+<pre><code id="code_bubble" class="language-cpp">void bubble_sort(int arr[], int size) {
+	int swapped = 1;
+	for(int i = 0; i &lt; size-1 &amp;&amp; swapped; i++) {
+		swapped = 0;
+		for (int j = 0; j &lt; size - 1 - i; j++)
+			if(arr[j] &gt; arr[j+1]) {
+				int temp = arr[j];
+				arr[j] = arr[j+1];
+				arr[j+1] = temp;
+				swapped = 1;
+			}
+	}
+}
+</code></pre>
+        </div>
+
+        <h2>Marge Sort (Divide and Conquer)</h2>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Pseudo Code</span><button class="copy-btn" data-target="code_merge_pseudo">Copy</button></div>
+<pre><code id="code_merge_pseudo" class="language-plaintext">merge_sort(list) {
+	if list has more than 1 item
+		1. Divide list into list1 and list2
+		2. merge_sort(list1)
+		3. merge_sort(list2)
+		4. merge(list1, list2)
+}
+</code></pre>
+        </div>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Merge Sort C++</span><button class="copy-btn" data-target="code_merge">Copy</button></div>
+<pre><code id="code_merge" class="language-cpp">void merge_sort(int arr[], int start, int end)
+{
+    if (end &gt; start) {
+	    int mid = (start + end) / 2;
+	    merge_sort(arr, start, mid);
+	    merge_sort(arr, mid + 1, end);
+	    merge_list(arr, start, mid, end);
+    }
+}
+
+void merge_list(int arr[], int start, int mid, int end)
+{
+    int temp[100];
+
+    int i = 0;
+    int left = start;
+    int right = mid + 1;
+
+    while (left &lt;= mid &amp;&amp; right &lt;= end)
+    {
+        if (arr[left] &lt;= arr[right])
+            temp[i++] = arr[left++];
+        else
+            temp[i++] = arr[right++];
+    }
+
+    while (left &lt;= mid)
+        temp[i++] = arr[left++];
+
+    while (right &lt;= end)
+        temp[i++] = arr[right++];
+
+    for (int j = 0; j &lt; size; j++)
+        arr[start + j] = temp[j];
+}
+</code></pre>
+        </div>
+
+        <h2>Quick Sort (Divide and Conquer)</h2>
+        <p>Smaller → <code class="inline">Pivot</code> → Greater</p>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Pseudo Code</span><button class="copy-btn" data-target="code_quick_pseudo">Copy</button></div>
+<pre><code id="code_quick_pseudo" class="language-plaintext">Quick_sort(array, start_index, end_index)
+	if (end_index &gt; start_index)
+		step 1: set a value at start_index as Pivot
+		step 2: loc = position(array, start_index, end_index)
+		step 3: Quick_sort(array, start_index, loc - 1)
+		step 4: Quick_sort(array, loc + 1, end_index)
+
+
+Position(array, start_index, end_index)
+	step 1: set pivot = array[start_index]
+	step 2: set left = start_index + 1
+	        set right = end_index
+	step 3: while (left &lt;= right)
+	            while (left &lt;= end_index AND array[left] &lt;= pivot)
+	                left = left + 1
+	            while (array[right] &gt; pivot)
+	                right = right - 1
+	            if (left &lt; right)
+	                swap(array[left], array[right])
+	step 4: swap(array[start_index], array[right])
+	step 5: return right
+</code></pre>
+        </div>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Quick Sort C++</span><button class="copy-btn" data-target="code_quick">Copy</button></div>
+<pre><code id="code_quick" class="language-cpp">void quick_sort(int arr[], int start, int end) {
+    if (end &gt; start) {
+        int loc = position(arr, start, end);
+        quick_sort(arr, start, loc - 1);
+        quick_sort(arr, loc + 1, end);
+    }
+}
+
+int position(int arr[], int start, int end) {
+    int pivot = start;
+    int left = start + 1;
+    int right = end;
+    int temp;
+
+    while (left &lt;= right) {
+        while (left &lt;= end &amp;&amp; arr[left] &lt;= arr[pivot])
+            left++;
+        while (arr[right] &gt; arr[pivot])
+            right--;
+        if (left &lt; right) {
+            temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+        }
+    }
+    temp = arr[pivot];
+    arr[pivot] = arr[right];
+    arr[right] = temp;
+    
+    return right;
+}
+</code></pre>
+        </div>
+
+        <h1>Insertion Sort (Insertion by Shifting Right)</h1>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Insertion Sort C++</span><button class="copy-btn" data-target="code_insertion">Copy</button></div>
+<pre><code id="code_insertion" class="language-cpp">void insertion_sort(int arr[], int start, int end) {
+	for(int i = start + 1; i &lt; end; i++) {
+		int key = arr[i];
+		int j = i - 1;
+		while(j &gt;= start &amp;&amp; arr[j] &gt; key) {
+			arr[j+1] = arr[j];
+			j--;
+		}
+		arr[j+1] = key;
+	}
+}
+</code></pre>
+        </div>
+
+        <h1>Binary Search</h1>
+        <p>The array/list must be <strong>sorted</strong>.</p>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Pseudo Code</span><button class="copy-btn" data-target="code_binary_pseudo">Copy</button></div>
+<pre><code id="code_binary_pseudo" class="language-plaintext">binary_search(list, key) {
+	1. Find the middle of the list
+	2. If value of mid == key → Found
+	3. Else if value of mid &gt; key → search left part
+	4. Else → search right part
+	return location
+}
+</code></pre>
+        </div>
+        <div class="code-wrapper">
+            <div class="code-header"><span>Binary Search C++</span><button class="copy-btn" data-target="code_binary">Copy</button></div>
+<pre><code id="code_binary" class="language-cpp">int binary_search(int arr[], int start, int end, int key){
+	int loc = -1;
+	int mid;	
+	while(start &lt;= end &amp;&amp; loc == -1){
+		mid = (start + end) / 2;
+		if(arr[mid] == key)
+			loc = mid;
+		else if(arr[mid] &gt; key)
+			end = mid - 1;
+		else
+			start = mid + 1;
+	}
+	return loc;
+}
+</code></pre>
+        </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+    // Copy-to-clipboard for code blocks
+    document.querySelectorAll('.copy-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=> {
+        const id = btn.getAttribute('data-target');
+        const codeEl = document.getElementById(id);
+        if(!codeEl) return;
+        // get text content
+        const text = codeEl.textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(()=> btn.textContent = originalText, 1400);
+        } catch(e){
+          btn.textContent = 'Error';
+          setTimeout(()=> btn.textContent = 'Copy', 1400);
+        }
+      });
+    });
+</script>
+</body>
+</html>
